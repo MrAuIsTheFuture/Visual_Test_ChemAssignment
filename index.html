@@ -3,126 +3,159 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Visual Test for Organic Compound</title>
+<title>Organic Chemistry: Lab Detective</title>
 <style>
-body { font-family: 'Courier New', Courier, monospace; background:#1a1a2e; margin:0; padding:20px; color:#e1e1e1; }
-.container { max-width: 800px; margin:auto; background:#16213e; padding:30px; border-radius:15px; border: 2px solid #0f3460; box-shadow:0 0 20px rgba(0,255,255,0.2); }
-h1 { color:#4cc9f0; text-align: center; text-transform: uppercase; letter-spacing: 2px; }
+/* 1. DARK LAB THEME */
+body { 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    background: #0f172a; 
+    margin: 0; 
+    padding: 20px; 
+    color: #f8fafc; 
+}
+.container { 
+    max-width: 800px; 
+    margin: auto; 
+    background: #1e293b; 
+    padding: 40px; 
+    border-radius: 20px; 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+    border: 1px solid #334155;
+}
+h1 { color: #38bdf8; text-align: center; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 5px; }
+p.subtitle { text-align: center; color: #94a3b8; margin-bottom: 30px; }
 
-/* The Test Tube Visual */
-#lab-bench { display: flex; justify-content: center; margin: 20px 0; }
+/* 2. THE VIRTUAL TEST TUBE */
+#lab-bench { display: flex; justify-content: center; margin: 30px 0; }
 .test-tube {
-    width: 60px; height: 180px; 
-    border: 3px solid #ccc; 
-    border-radius: 0 0 30px 30px; 
-    background: rgba(255,255,255,0.1);
+    width: 70px; height: 200px; 
+    border: 4px solid #94a3b8; 
+    border-radius: 0 0 35px 35px; 
+    background: rgba(255,255,255,0.05);
     position: relative; overflow: hidden;
+    box-shadow: inset 0 0 20px rgba(255,255,255,0.1);
 }
 .liquid {
-    position: absolute; bottom: 0; width: 100%; height: 70%;
-    background: #555; transition: background 1s, height 0.5s;
+    position: absolute; bottom: 0; width: 100%; height: 60%;
+    background: #64748b; /* Default grey liquid */
+    transition: all 1s ease;
 }
 
-/* Game Elements */
-button { background:#4361ee; color:white; border:none; padding:12px 20px; border-radius:4px; cursor:pointer; font-weight: bold; }
-button:hover { background:#4cc9f0; transform: scale(1.02); }
-.option { display:block; width: 100%; margin:10px 0; background:#0f3460; text-align: left; border: 1px solid #4361ee; }
-.hidden { display:none; }
-.correct { background:#4caf50 !important; }
-.wrong { background:#e91e63 !important; }
-.theory { background:#1b262c; border-left:4px solid #4cc9f0; padding:15px; margin-top:20px; font-style: italic; color: #94d2bd; }
-<style>
+/* 3. GAME BUTTONS */
+button { 
+    background: #0ea5e9; color: white; border: none; 
+    padding: 12px 24px; border-radius: 8px; cursor: pointer; 
+    font-weight: 600; transition: 0.3s;
+}
+button:hover { background: #38bdf8; transform: translateY(-2px); }
+input[type=text] { 
+    width: 90%; padding: 12px; border: 1px solid #334155; 
+    border-radius: 8px; background: #0f172a; color: white; margin-bottom: 10px;
+}
+.option { 
+    display: block; width: 100%; margin: 12px 0; padding: 15px; 
+    background: #334155; text-align: left; border: 1px solid #475569; 
+    border-radius: 10px; color: #f1f5f9; cursor: pointer;
+}
+.option:hover { background: #475569; border-color: #38bdf8; }
+
+/* 4. FEEDBACK COLORS */
+.hidden { display: none; }
+.correct { background: #059669 !important; border-color: #10b981 !important; box-shadow: 0 0 15px rgba(16,185,129,0.4); }
+.wrong { background: #be123c !important; border-color: #f43f5e !important; }
+.theory { 
+    background: #0f172a; border-left: 5px solid #38bdf8; 
+    padding: 20px; margin-top: 25px; border-radius: 8px; font-style: italic; 
+}
+#leaderboard { background: #0f172a; padding: 15px; border-radius: 10px; }
+</style>
 </head>
 <body>
+
 <div class="container">
-  <h1>Visual Test for Organic Compound</h1>
-  <p>Pre-University Chemistry Quiz (5–7 random questions)</p>
+  <h1>Lab Detective</h1>
+  <p class="subtitle">Qualitative Organic Analysis</p>
 
   <div id="startScreen">
-    <label><strong>Enter Your Name:</strong></label>
-    <input type="text" id="playerName" placeholder="Your name">
-    <button onclick="startGame()">Start Game</button>
+    <label><strong>Authorized Personnel Name:</strong></label>
+    <input type="text" id="playerName" placeholder="Enter name...">
+    <button onclick="startGame()">Access Lab</button>
   </div>
 
   <div id="quizScreen" class="hidden">
-    <p><strong>Player:</strong> <span id="displayName"></span></p>
-    <p><strong>Question <span id="qNum"></span> of <span id="qTotal"></span></strong></p>
+    <p><strong>Detective:</strong> <span id="displayName"></span> | <strong>Case:</strong> <span id="qNum"></span>/<span id="qTotal"></span></p>
+    
+    <div id="lab-bench">
+      <div class="test-tube">
+        <div id="liquidColor" class="liquid"></div>
+      </div>
+    </div>
+
     <h3 id="questionText"></h3>
     <div id="options"></div>
     <div id="feedback"></div>
-    <button id="nextBtn" class="hidden" onclick="nextQuestion()">Next Question</button>
+    <button id="nextBtn" class="hidden" onclick="nextQuestion()">Proceed to Next Case</button>
   </div>
 
   <div id="endScreen" class="hidden">
-    <h2>Game Complete!</h2>
+    <h2>Investigation Complete!</h2>
     <p id="finalScore"></p>
-    <h3>Leaderboard</h3>
+    <h3>Local Crime Lab Records</h3>
     <ol id="leaderboard"></ol>
-    <button onclick="restartGame()">Play Again</button>
+    <button onclick="restartGame()">New Investigation</button>
   </div>
 </div>
 
 <script>
 const QUESTION_BANK = [
   {
-    q: "What happens when bromine water is added to an alkene at room temperature?",
-    options: ["Orange to colourless", "Blue to red", "Purple to green", "No change"],
+    q: "A scientist bubbles an unknown alkene into this orange solution. What change occurs?",
+    options: ["Orange to colourless", "Turns blue", "Solid precipitate forms", "No change"],
     answer: 0,
-    theory: "Alkenes contain a C=C double bond that reacts rapidly with bromine water, decolourising the orange solution."
+    type: "alkene",
+    theory: "Alkenes break their double bonds to bond with Bromine, removing the orange color."
   },
   {
-    q: "What is the positive observation in Tollens' test for an aldehyde?",
-    options: ["Blue precipitate", "Silver mirror", "Effervescence", "Purple solution"],
+    q: "You add Tollens' reagent to a suspect aldehyde. What appears on the glass?",
+    options: ["Green sludge", "Silver mirror", "Gas bubbles", "Blue solution"],
     answer: 1,
-    theory: "Aldehydes reduce Tollens' reagent, depositing metallic silver on the test tube wall."
+    type: "silver",
+    theory: "Aldehydes reduce silver ions into actual metallic silver, coating the tube."
   },
   {
-    q: "Which reagent gives an orange precipitate with aldehydes and ketones?",
-    options: ["2,4-DNPH", "Bromine water", "Sodium bicarbonate", "Ferric chloride"],
+    q: "Which reagent is used to find a carbonyl group (orange precipitate)?",
+    options: ["2,4-DNPH", "Bromine Water", "Sodium Bicarbonate", "Ferric Chloride"],
     answer: 0,
-    theory: "2,4-Dinitrophenylhydrazine reacts with carbonyl compounds to form an orange precipitate."
+    type: "orange_ppt",
+    theory: "2,4-Dinitrophenylhydrazine (DNPH) is the standard test for aldehydes and ketones."
   },
   {
-    q: "What observation occurs when sodium bicarbonate is added to a carboxylic acid?",
-    options: ["Silver mirror", "Effervescence of CO₂", "Purple colour", "Orange precipitate"],
+    q: "You add Sodium Bicarbonate to a Carboxylic Acid. What do you hear and see?",
+    options: ["The tube gets cold", "Effervescence (bubbles) of CO₂", "A purple flash", "It turns green"],
     answer: 1,
-    theory: "Carboxylic acids react with bicarbonate to release carbon dioxide gas, causing bubbling."
+    type: "bubbles",
+    theory: "Acid + Carbonate = Salt + Water + Carbon Dioxide gas."
   },
   {
-    q: "What colour appears when ferric chloride is added to phenol?",
-    options: ["Purple/violet", "Brick-red", "Colourless", "Black"],
+    q: "A drop of Ferric Chloride hits a sample of Phenol. What color is the complex?",
+    options: ["Purple/Violet", "Brick-red", "Bright Yellow", "Deep Black"],
     answer: 0,
-    theory: "Phenol forms a coloured complex with Fe³⁺ ions, commonly producing a violet solution."
+    type: "phenol",
+    theory: "Iron(III) ions react with phenol groups to form a distinct violet complex."
   },
   {
-    q: "What condition is typically used to oxidise ethanol to ethanoic acid?",
-    options: ["Acidified potassium dichromate and heat under reflux", "UV light only", "Ice bath", "No reagent"],
+    q: "How do we ensure Ethanol fully oxidises to Ethanoic Acid?",
+    options: ["Reflux with acidified dichromate", "Leave it in the sun", "Mix with cold water", "Add salt"],
     answer: 0,
-    theory: "Primary alcohols are oxidised by acidified potassium dichromate(VI) under reflux to carboxylic acids."
+    type: "oxidation",
+    theory: "Heating under reflux prevents the volatile intermediate (ethanal) from escaping."
   },
   {
-    q: "What colour change is seen when acidified potassium dichromate oxidises an alcohol?",
-    options: ["Orange to green", "Blue to red", "Purple to yellow", "No change"],
+    q: "What color change confirms the dichromate has oxidised the alcohol?",
+    options: ["Orange to green", "Red to blue", "Clear to pink", "Yellow to purple"],
     answer: 0,
-    theory: "Cr₂O₇²⁻ (orange) is reduced to Cr³⁺ (green) during oxidation."
-  },
-  {
-    q: "Which compound gives a positive Tollens' test but also forms an orange precipitate with 2,4-DNPH?",
-    options: ["Ketone", "Aldehyde", "Alkene", "Phenol"],
-    answer: 1,
-    theory: "Aldehydes contain a carbonyl group (positive 2,4-DNPH) and can be oxidised (positive Tollens')."
-  },
-  {
-    q: "Which condition is required for the bromine water test for alkenes?",
-    options: ["Room temperature, no catalyst", "Strong heating", "UV light", "Concentrated sulfuric acid"],
-    answer: 0,
-    theory: "The addition reaction occurs readily at room temperature without special conditions."
-  },
-  {
-    q: "Which compound type does NOT react with 2,4-DNPH?",
-    options: ["Aldehydes", "Ketones", "Alcohols", "Both aldehydes and ketones"],
-    answer: 2,
-    theory: "Alcohols lack the C=O carbonyl group required to react with 2,4-DNPH."
+    type: "oxidation",
+    theory: "The orange Dichromate ion is reduced to the green Chromium(III) ion."
   }
 ];
 
@@ -131,28 +164,18 @@ let current = 0;
 let score = 0;
 let player = "";
 
-function shuffle(arr) {
-  return [...arr].sort(() => Math.random() - 0.5);
-}
-
 function startGame() {
   player = document.getElementById('playerName').value.trim();
-  if (!player) {
-    alert("Please enter your name.");
-    return;
-  }
-
-  const total = Math.floor(Math.random() * 3) + 5; // 5 to 7 questions
-  selectedQuestions = shuffle(QUESTION_BANK).slice(0, total);
-  current = 0;
-  score = 0;
-
+  if (!player) { alert("Access Denied: Enter Name."); return; }
+  
+  selectedQuestions = [...QUESTION_BANK].sort(() => Math.random() - 0.5).slice(0, 6);
+  current = 0; score = 0;
+  
   document.getElementById('displayName').textContent = player;
   document.getElementById('qTotal').textContent = selectedQuestions.length;
   document.getElementById('startScreen').classList.add('hidden');
   document.getElementById('endScreen').classList.add('hidden');
   document.getElementById('quizScreen').classList.remove('hidden');
-
   showQuestion();
 }
 
@@ -162,6 +185,11 @@ function showQuestion() {
   document.getElementById('questionText').textContent = q.q;
   document.getElementById('feedback').innerHTML = "";
   document.getElementById('nextBtn').classList.add('hidden');
+  
+  // RESET LIQUID TO NEUTRAL
+  const liquid = document.getElementById('liquidColor');
+  liquid.style.background = "#64748b"; 
+  liquid.style.height = "60%";
 
   const optionsDiv = document.getElementById('options');
   optionsDiv.innerHTML = "";
@@ -178,75 +206,57 @@ function showQuestion() {
 function checkAnswer(choice, button) {
   const q = selectedQuestions[current];
   const buttons = document.querySelectorAll('.option');
+  const liquid = document.getElementById('liquidColor');
   buttons.forEach(btn => btn.disabled = true);
 
   if (choice === q.answer) {
     score++;
     button.classList.add('correct');
+    
+    // TRIGGER VISUAL CHEMICAL REACTION
+    if(q.type === "alkene") liquid.style.background = "#f1f5f9"; // Orange fades
+    if(q.type === "silver") liquid.style.background = "linear-gradient(to right, #94a3b8, #f1f5f9, #94a3b8)"; // Silver
+    if(q.type === "phenol") liquid.style.background = "#7c3aed"; // Purple
+    if(q.type === "oxidation") liquid.style.background = "#059669"; // Green
+    if(q.type === "orange_ppt") liquid.style.background = "#ea580c"; // Orange
+    if(q.type === "bubbles") {
+        liquid.style.height = "90%"; // Liquid rises with gas
+        liquid.style.background = "#cbd5e1";
+    }
+
   } else {
     button.classList.add('wrong');
     buttons[q.answer].classList.add('correct');
+    liquid.style.background = "#450a0a"; // Reaction failed/burnt look
   }
 
-  document.getElementById('feedback').innerHTML =
-    `<div class="theory"><strong>Theory:</strong> ${q.theory}</div>`;
+  document.getElementById('feedback').innerHTML = `<div class="theory"><strong>Case File Note:</strong> ${q.theory}</div>`;
   document.getElementById('nextBtn').classList.remove('hidden');
 }
 
 function nextQuestion() {
   current++;
-  if (current < selectedQuestions.length) {
-    showQuestion();
-  } else {
-    endGame();
-  }
+  if (current < selectedQuestions.length) { showQuestion(); } 
+  else { endGame(); }
 }
 
 function endGame() {
-  saveScore();
   document.getElementById('quizScreen').classList.add('hidden');
   document.getElementById('endScreen').classList.remove('hidden');
-  document.getElementById('finalScore').textContent =
-    `${player}, you scored ${score} out of ${selectedQuestions.length}.`;
-  renderLeaderboard();
-}
-
-function saveScore() {
-  const board = JSON.parse(localStorage.getItem('organicLeaderboard') || '[]');
-  board.push({
-    name: player,
-    score: score,
-    total: selectedQuestions.length,
-    percent: Math.round((score / selectedQuestions.length) * 100),
-    date: new Date().toLocaleDateString()
-  });
-
-  board.sort((a, b) => b.percent - a.percent || b.score - a.score);
-  localStorage.setItem('organicLeaderboard', JSON.stringify(board.slice(0, 10)));
-}
-
-function renderLeaderboard() {
-  const board = JSON.parse(localStorage.getItem('organicLeaderboard') || '[]');
+  document.getElementById('finalScore').textContent = `Detective ${player}, you solved ${score} out of ${selectedQuestions.length} cases correctly.`;
+  
+  // Simple Leaderboard save
+  const board = JSON.parse(localStorage.getItem('labScores') || '[]');
+  board.push({name: player, score: score});
+  board.sort((a,b) => b.score - a.score);
+  localStorage.setItem('labScores', JSON.stringify(board.slice(0,5)));
+  
   const list = document.getElementById('leaderboard');
-  list.innerHTML = '';
-
-  if (board.length === 0) {
-    list.innerHTML = '<li>No scores yet.</li>';
-    return;
-  }
-
-  board.forEach(entry => {
-    const li = document.createElement('li');
-    li.textContent = `${entry.name} — ${entry.score}/${entry.total} (${entry.percent}%)`;
-    list.appendChild(li);
-  });
+  list.innerHTML = board.slice(0,5).map(e => `<li>${e.name}: ${e.score} cases solved</li>`).join('');
 }
 
 function restartGame() {
-  document.getElementById('playerName').value = "";
-  document.getElementById('startScreen').classList.remove('hidden');
-  document.getElementById('quizScreen').classList.add('hidden');
-  document.getElementById('endScreen').classList.add('hidden');
+  location.reload();
 }
 </script>
 </body>
