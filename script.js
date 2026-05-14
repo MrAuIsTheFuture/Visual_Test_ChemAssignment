@@ -1,9 +1,13 @@
 let current = 0;
-let mistakes = 0;
-let firstAttempt = true;
+let score = 0;
+let attemptsThisRoom = 0;
+const MAX_SCORE_PER_ROOM = 10;
 
+const gameBoard = document.getElementById('gameBoard');
+const finalScreen = document.getElementById('finalScreen');
 const roomTitle = document.getElementById('roomTitle');
 const progressText = document.getElementById('progressText');
+const scoreText = document.getElementById('scoreText');
 const observation = document.getElementById('observation');
 const questionEl = document.getElementById('question');
 const answersContainer = document.getElementById('answers');
@@ -11,20 +15,21 @@ const resultCard = document.getElementById('resultCard');
 const resultTitle = document.getElementById('resultTitle');
 const resultMessage = document.getElementById('resultMessage');
 const nextBtn = document.getElementById('nextBtn');
-const gameShell = document.querySelector('.game-shell');
+const restartBtn = document.getElementById('restartBtn');
 
 function renderRoom() {
   const q = QUESTIONS[current];
-  firstAttempt = true;
-  
   roomTitle.textContent = q.room;
   progressText.textContent = `${current + 1} / ${QUESTIONS.length}`;
   observation.textContent = q.observation;
   questionEl.textContent = q.question;
-  
   answersContainer.innerHTML = '';
+  
   resultCard.classList.add('hidden');
   nextBtn.classList.add('hidden');
+  
+  // Reset attempts for the new room
+  attemptsThisRoom = 0;
 
   q.answers.forEach(([name, correct, color]) => {
     const button = document.createElement('button');
@@ -41,77 +46,79 @@ function renderRoom() {
 }
 
 function checkAnswer(button, correct, explanation) {
+  resultCard.classList.remove('hidden');
+
   if (correct) {
-    // Disable all tubes once correct
-    document.querySelectorAll('.test-tube').forEach(btn => btn.style.pointerEvents = 'none');
-    
+    // Disable all buttons once the correct answer is found
+    document.querySelectorAll('.test-tube').forEach(btn => btn.disabled = true);
     button.classList.add('correct');
-    resultCard.classList.remove('hidden');
-    resultCard.style.borderColor = "#00ffa6";
-    resultTitle.textContent = "🧪 Reaction Successful!";
-    resultMessage.textContent = explanation;
+    
+    // Calculate score: Lose 3 points for every wrong attempt, minimum 1 point for getting it eventually.
+    let pointsEarned = MAX_SCORE_PER_ROOM - (attemptsThisRoom * 3);
+    if (pointsEarned < 1) pointsEarned = 1; 
+    score += pointsEarned;
+    scoreText.textContent = score;
+
+    resultTitle.innerHTML = '<span class="success-text">✅ Access Granted</span>';
+    resultMessage.innerHTML = `Correct! ${explanation} <br><br><em>Data recovered: +${pointsEarned} points.</em>`;
     nextBtn.classList.remove('hidden');
+    nextBtn.textContent = 'Proceed to Next Chamber 🔓';
     
-    if (current === QUESTIONS.length - 1) {
-      nextBtn.textContent = 'See Final Evaluation 📊';
-    } else {
-      nextBtn.textContent = 'Next Room 🔓';
-    }
   } else {
-    // If wrong, penalize score only on first attempt
-    if (firstAttempt) {
-      mistakes++;
-      firstAttempt = false;
-    }
-    
+    // If wrong, only disable the clicked button and let them try again
+    attemptsThisRoom++;
     button.classList.add('wrong');
-    button.style.opacity = "0.5";
-    button.style.pointerEvents = "none"; // Stop clicking the same wrong one
-    
-    resultCard.classList.remove('hidden');
-    resultCard.style.borderColor = "#ff4646";
-    resultTitle.textContent = "⚠️ Reaction Failed!";
-    resultMessage.textContent = "That reagent didn't produce the expected result. Look at the observation again and try a different tube!";
+    button.disabled = true;
+
+    resultTitle.innerHTML = '<span class="error-text">❌ Access Denied</span>';
+    resultMessage.innerHTML = `Incorrect compound selected. Security system intercept: <br><br><strong>Hint:</strong> ${explanation} <br><br>Select another test tube to continue bypass.`;
+    nextBtn.classList.add('hidden'); // Ensure next button stays hidden until correct
   }
 }
 
-function showFinalResults() {
-  const totalQuestions = QUESTIONS.length;
-  const score = Math.max(0, totalQuestions - mistakes);
-  const percentage = (score / totalQuestions) * 100;
-  
-  let rating = "";
-  let color = "";
-  
-  if (percentage >= 80) {
-    rating = "EXCELLENT";
-    color = "#00ffa6";
-  } else if (percentage >= 50) {
-    rating = "OK / SATISFACTORY";
-    color = "#ffb347";
-  } else {
-    rating = "BAD / NEEDS REVIEW";
-    color = "#ff4646";
-  }
-
-  gameShell.innerHTML = `
-    <div class="result-card" style="display:block; text-align:center; padding: 50px;">
-      <h1 style="color: ${color}">${rating}</h1>
-      <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 20px 0;">
-      <p style="font-size: 1.5rem;">Your Final Mark: <strong>${score} / ${totalQuestions}</strong></p>
-      <p style="color: #9fdfff;">Accuracy: ${percentage}%</p>
-      <button onclick="location.reload()" class="next-btn" style="display:inline-block; margin-top: 30px;">Restart Lab 🔁</button>
-    </div>
-  `;
+function showFinalScreen() {
+    gameBoard.classList.add('hidden');
+    finalScreen.classList.remove('hidden');
+    
+    const maxPossible = QUESTIONS.length * MAX_SCORE_PER_ROOM;
+    const finalScoreDisplay = document.getElementById('finalScoreDisplay');
+    const finalGrade = document.getElementById('finalGrade');
+    
+    finalScoreDisplay.textContent = `Final Score: ${score} / ${maxPossible}`;
+    
+    // Determine Good/OK/Bad rating
+    const percentage = (score / maxPossible) * 100;
+    
+    if (percentage >= 80) {
+        finalGrade.textContent = "🏆 Excellent! Master Chemist";
+        finalGrade.style.color = "#00ffa6";
+    } else if (percentage >= 50) {
+        finalGrade.textContent = "👍 Good Job! Certified Lab Tech";
+        finalGrade.style.color = "#4fd1ff";
+    } else {
+        finalGrade.textContent = "⚠️ Warning: Back to the Textbooks";
+        finalGrade.style.color = "#ff6b6b";
+    }
 }
 
 nextBtn.addEventListener('click', () => {
   if (current === QUESTIONS.length - 1) {
-    showFinalResults();
+    showFinalScreen();
   } else {
     current++;
     renderRoom();
   }
 });
 
+restartBtn.addEventListener('click', () => {
+    // Reset the game
+    current = 0;
+    score = 0;
+    scoreText.textContent = score;
+    finalScreen.classList.add('hidden');
+    gameBoard.classList.remove('hidden');
+    renderRoom();
+});
+
+// Initialize first room
 renderRoom();
