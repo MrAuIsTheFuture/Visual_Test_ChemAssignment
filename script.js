@@ -37,7 +37,7 @@ function renderRoom() {
     document.getElementById('nextBtn').classList.add('hidden');
     attemptsThisRoom = 0;
 
-    // SHUFFLE answers
+    // SHUFFLE answers randomly
     const shuffled = [...q.answers].sort(() => Math.random() - 0.5);
 
     shuffled.forEach(([name, correct, color]) => {
@@ -68,7 +68,7 @@ function renderRoom() {
                     btn.classList.add('wrong');
                     attemptsThisRoom++;
                     document.getElementById('resultTitle').innerHTML = `<span style="color:#ff6b6b">❌ FAILED</span>`;
-                    document.getElementById('resultMessage').textContent = "Wrong chemical! Try another one.";
+                    document.getElementById('resultMessage').textContent = "Wrong chemical! Security system active.";
                     document.querySelectorAll('.test-tube').forEach(t => { if(!t.classList.contains('wrong')) t.disabled = false; });
                 }
             }, 1200);
