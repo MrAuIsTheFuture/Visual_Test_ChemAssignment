@@ -30,6 +30,12 @@ body {
 .game-shell {
   width: min(1100px, calc(100% - 32px));
   margin: 32px auto;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .top-bar {
@@ -48,6 +54,13 @@ h1 {
 .subtitle {
   margin: 8px 0 0;
   color: #9fdfff;
+  font-family: monospace;
+  font-size: 1.1rem;
+}
+
+.stats-container {
+  display: flex;
+  gap: 12px;
 }
 
 .progress-card,
@@ -64,7 +77,7 @@ h1 {
 
 .progress-card {
   padding: 16px 22px;
-  min-width: 120px;
+  min-width: 100px;
   text-align: center;
 }
 
@@ -72,6 +85,8 @@ h1 {
   display: block;
   font-size: 0.85rem;
   color: #9fdfff;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .progress-card strong {
@@ -111,10 +126,10 @@ h1 {
   cursor: pointer;
   color: inherit;
   padding: 0;
-  transition: transform 0.25s ease;
+  transition: transform 0.25s ease, opacity 0.3s ease;
 }
 
-.test-tube:hover {
+.test-tube:not(:disabled):hover {
   transform: translateY(-10px) scale(1.03);
 }
 
@@ -184,15 +199,34 @@ h1 {
     inset 0 0 25px rgba(0, 255, 120, 0.15);
 }
 
+/* Updated wrong answer styling */
+.test-tube.wrong {
+  animation: shake 0.4s ease-in-out;
+  opacity: 0.4;
+  cursor: not-allowed;
+  filter: grayscale(80%);
+}
+
 .test-tube.wrong .glass {
   box-shadow:
     0 0 35px rgba(255, 70, 70, 0.5),
     inset 0 0 25px rgba(255, 70, 70, 0.15);
 }
 
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-8px); }
+  40%, 80% { transform: translateX(8px); }
+}
+
 .result-card.hidden,
-.next-btn.hidden {
+.next-btn.hidden,
+.game-shell.hidden {
   display: none;
+}
+
+.center-text {
+  text-align: center;
 }
 
 .next-btn {
@@ -205,13 +239,26 @@ h1 {
   cursor: pointer;
   background: linear-gradient(90deg, #00d4ff, #00ffa6);
   color: #021019;
+  transition: transform 0.2s;
+}
+
+.next-btn:hover {
+  transform: scale(1.05);
+}
+
+.error-text {
+  color: #ff6b6b;
+  font-family: monospace;
+}
+
+.success-text {
+  color: #00ffa6;
 }
 
 @media (max-width: 700px) {
   .top-bar {
     flex-direction: column;
   }
-
   .glass {
     width: 74px;
     height: 220px;
