@@ -8,20 +8,27 @@
 </head>
 <body>
 <div class="background-glow"></div>
-<main class="game-shell">
+
+<main class="game-shell" id="gameBoard">
   <header class="top-bar">
     <div>
-      <h1>🧪 Chemistry Escape Room</h1>
+      <h1>🧪 Lab Lockdown</h1>
       <p class="subtitle" id="roomTitle"></p>
     </div>
-    <div class="progress-card">
-      <span>Progress</span>
-      <strong id="progressText">1 / 10</strong>
+    <div class="stats-container">
+      <div class="progress-card">
+        <span>Security Level</span>
+        <strong id="progressText">1 / 10</strong>
+      </div>
+      <div class="progress-card">
+        <span>Score</span>
+        <strong id="scoreText">0</strong>
+      </div>
     </div>
   </header>
 
   <section class="story-card">
-    <h2>🔬 Experiment Observation</h2>
+    <h2>🔬 Field Observation</h2>
     <p id="observation"></p>
     <p class="question" id="question"></p>
   </section>
@@ -31,9 +38,19 @@
   <section class="result-card hidden" id="resultCard">
     <h3 id="resultTitle"></h3>
     <p id="resultMessage"></p>
-    <button id="nextBtn" class="next-btn hidden">Next Room 🔓</button>
+    <button id="nextBtn" class="next-btn hidden">Proceed to Next Chamber 🔓</button>
   </section>
 </main>
+
+<main class="game-shell hidden" id="finalScreen">
+  <section class="story-card center-text">
+    <h1 style="color: #00ffa6; margin-bottom: 10px;">Simulation Complete</h1>
+    <h2 id="finalGrade" style="font-size: 2rem;"></h2>
+    <p id="finalScoreDisplay" style="font-size: 1.5rem; margin-top: 20px;"></p>
+    <button id="restartBtn" class="next-btn" style="margin-top: 30px;">Reboot System 🔁</button>
+  </section>
+</main>
+
 <script src="questions.js"></script>
 <script src="script.js"></script>
 </body>
