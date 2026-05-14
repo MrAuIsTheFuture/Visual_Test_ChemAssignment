@@ -7,29 +7,42 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="background-glow"></div>
 
-<main class="game-shell" id="gameBoard">
+<main class="game-shell" id="introScreen">
+  <section class="story-card center-text">
+    <h1 style="color: #00ffa6; font-size: 3rem;">🧪 The Mad Lab</h1>
+    <p style="font-size: 1.2rem; margin-bottom: 30px;">You are trapped in Dr. Beaker's abandoned laboratory. To escape, you must mix the correct chemicals to override the security systems. Be careful... some mixtures smell like dirty socks, and others might explode.</p>
+    
+    <div class="input-group">
+      <label for="playerNameInput">Enter Your Scientist Name:</label>
+      <input type="text" id="playerNameInput" placeholder="e.g. Dr. Boom" autocomplete="off">
+    </div>
+    
+    <button id="startBtn" class="next-btn" style="margin-top: 20px; font-size: 1.2rem;">Put on Goggles & Enter Lab 🥽</button>
+  </section>
+</main>
+
+<main class="game-shell hidden" id="gameBoard">
   <header class="top-bar">
     <div>
-      <h1>🧪 Lab Lockdown</h1>
+      <h1>🧪 Area Locked</h1>
       <p class="subtitle" id="roomTitle"></p>
     </div>
     <div class="stats-container">
       <div class="progress-card">
-        <span>Security Level</span>
+        <span>Door</span>
         <strong id="progressText">1 / 10</strong>
       </div>
       <div class="progress-card">
-        <span>Score</span>
+        <span>Lab Score</span>
         <strong id="scoreText">0</strong>
       </div>
     </div>
   </header>
 
   <section class="story-card">
-    <h2>🔬 Field Observation</h2>
-    <p id="observation"></p>
+    <h2>🔬 The Cauldron</h2>
+    <p id="observation" style="font-style: italic; color: #bdfaff;"></p>
     <p class="question" id="question"></p>
   </section>
 
@@ -38,16 +51,17 @@
   <section class="result-card hidden" id="resultCard">
     <h3 id="resultTitle"></h3>
     <p id="resultMessage"></p>
-    <button id="nextBtn" class="next-btn hidden">Proceed to Next Chamber 🔓</button>
+    <button id="nextBtn" class="next-btn hidden">Rush to Next Room 🏃💨</button>
   </section>
 </main>
 
 <main class="game-shell hidden" id="finalScreen">
   <section class="story-card center-text">
-    <h1 style="color: #00ffa6; margin-bottom: 10px;">Simulation Complete</h1>
+    <h1 style="color: #00ffa6; margin-bottom: 10px;">Simulation Survived!</h1>
     <h2 id="finalGrade" style="font-size: 2rem;"></h2>
     <p id="finalScoreDisplay" style="font-size: 1.5rem; margin-top: 20px;"></p>
-    <button id="restartBtn" class="next-btn" style="margin-top: 30px;">Reboot System 🔁</button>
+    <p id="finalNameDisplay" style="font-size: 1.2rem; color: #9fdfff; margin-top: 10px;"></p>
+    <button id="restartBtn" class="next-btn" style="margin-top: 30px;">Play Again 🔁</button>
   </section>
 </main>
 
