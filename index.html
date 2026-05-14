@@ -7,22 +7,24 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="background-overlay"></div>
+
     <main class="game-shell" id="introScreen">
-        <section class="story-card" style="text-align: center;">
-            <h1 style="color: #00ffa6; font-size: 3rem;">🧪 The Mad Lab</h1>
-            <p style="font-size: 1.2rem; margin-bottom: 30px;">Trapped in Dr. Beaker's lab! Use your chemistry knowledge to mix the correct reagents and override the security system. One wrong move and... well, let's just say it gets messy.</p>
+        <section class="story-card center-text">
+            <h1 class="neon-text">🧪 The Mad Lab</h1>
+            <p class="description-text">Trapped in Dr. Beaker's abandoned laboratory! You must mix the correct reagents to override the security lockdown. One wrong move and the lab goes boom.</p>
             <div class="input-group">
-                <label for="playerNameInput" style="display:block; margin-bottom:10px;">Scientist Name:</label>
-                <input type="text" id="playerNameInput" placeholder="e.g. Professor Fizz" autocomplete="off">
+                <label for="playerNameInput">Scientist Name:</label>
+                <input type="text" id="playerNameInput" placeholder="e.g. Dr. Fizz" autocomplete="off">
             </div>
-            <button id="startBtn" class="next-btn" style="margin-top: 20px;">Put on Goggles & Enter 🥽</button>
+            <button id="startBtn" class="next-btn">Put on Goggles & Enter 🥽</button>
         </section>
     </main>
 
     <main class="game-shell hidden" id="gameBoard">
         <header class="top-bar">
             <div>
-                <h1>🔐 Area Secured</h1>
+                <h1 class="neon-text-small">🔐 Area Secured</h1>
                 <p class="subtitle" id="roomTitle"></p>
             </div>
             <div class="stats-container">
@@ -31,9 +33,11 @@
             </div>
         </header>
 
-        <section class="story-card">
+        <section class="story-card main-content">
             <h2>🔬 Observation Log</h2>
-            <p id="observation" style="font-style: italic; color: #bdfaff;"></p>
+            <div id="observation-container">
+                <p id="observation"></p>
+            </div>
             <p class="question" id="question"></p>
         </section>
 
@@ -48,10 +52,10 @@
 
     <main class="game-shell hidden" id="finalScreen">
         <section class="story-card center-text">
-            <h1 style="color: #00ffa6;">Simulation Survived!</h1>
-            <h2 id="finalGrade"></h2>
-            <p id="finalScoreDisplay" style="font-size: 1.5rem; margin-top: 20px;"></p>
-            <p id="finalNameDisplay" style="color: #9fdfff;"></p>
+            <h1 class="neon-text">Simulation Survived!</h1>
+            <h2 id="finalGrade" class="success-text"></h2>
+            <p id="finalScoreDisplay" style="font-size: 1.8rem; margin-top: 20px;"></p>
+            <p id="finalNameDisplay" style="color: #9fdfff; font-family: monospace;"></p>
             <button id="restartBtn" class="next-btn" style="margin-top: 30px;">Reboot System 🔁</button>
         </section>
     </main>
