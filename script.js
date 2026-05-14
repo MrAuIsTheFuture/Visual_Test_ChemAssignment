@@ -16,18 +16,17 @@ function playSfx(name) {
     sounds[name].play().catch(() => {});
 }
 
-// Function to shuffle the array of answers
-function shuffleAnswers(array) {
+function shuffle(array) {
     return array.sort(() => Math.random() - 0.5);
 }
 
-document.getElementById('startBtn').addEventListener('click', () => {
+document.getElementById('startBtn').onclick = () => {
     playerName = document.getElementById('playerNameInput').value || "Dr. Anonymous";
     playSfx('start');
     document.getElementById('introScreen').classList.add('hidden');
     document.getElementById('gameBoard').classList.remove('hidden');
     renderRoom();
-});
+};
 
 function renderRoom() {
     const q = QUESTIONS[current];
@@ -36,16 +35,16 @@ function renderRoom() {
     document.getElementById('observation').textContent = q.observation;
     document.getElementById('question').textContent = q.question;
     
-    const answersContainer = document.getElementById('answers');
-    answersContainer.innerHTML = '';
+    const container = document.getElementById('answers');
+    container.innerHTML = '';
     document.getElementById('resultCard').classList.add('hidden');
     document.getElementById('nextBtn').classList.add('hidden');
     attemptsThisRoom = 0;
 
-    // RANDOMIZE the answers before creating buttons
-    const randomizedAnswers = shuffleAnswers([...q.answers]);
+    // Shuffle the answers so the positions change every time
+    const shuffled = shuffle([...q.answers]);
 
-    randomizedAnswers.forEach(([name, correct, color]) => {
+    shuffled.forEach(([name, correct, color]) => {
         const btn = document.createElement('button');
         btn.className = 'test-tube';
         btn.innerHTML = `
@@ -56,38 +55,31 @@ function renderRoom() {
             document.querySelectorAll('.test-tube').forEach(t => t.disabled = true);
             btn.classList.add('pouring');
             playSfx('pour');
-            setTimeout(() => checkAnswer(btn, correct, q.explanation), 1200);
+            setTimeout(() => {
+                const card = document.getElementById('resultCard');
+                card.classList.remove('hidden');
+                if (correct) {
+                    playSfx('success');
+                    btn.classList.replace('pouring', 'correct');
+                    let pts = Math.max(1, 10 - (attemptsThisRoom * 3));
+                    score += pts;
+                    document.getElementById('scoreText').textContent = score;
+                    document.getElementById('resultTitle').innerHTML = `<span style="color:#00ffa6">✅ SUCCESS</span>`;
+                    document.getElementById('resultMessage').innerHTML = `<strong>Correct!</strong> ${q.explanation}`;
+                    document.getElementById('nextBtn').classList.remove('hidden');
+                } else {
+                    playSfx('fail');
+                    btn.classList.remove('pouring');
+                    btn.classList.add('wrong');
+                    attemptsThisRoom++;
+                    document.getElementById('resultTitle').innerHTML = `<span style="color:#ff6b6b">❌ FAILED</span>`;
+                    document.getElementById('resultMessage').textContent = "Incorrect reagent. Security system still active!";
+                    document.querySelectorAll('.test-tube').forEach(t => { if(!t.classList.contains('wrong')) t.disabled = false; });
+                }
+            }, 1200);
         };
-        answersContainer.appendChild(btn);
+        container.appendChild(btn);
     });
-}
-
-function checkAnswer(btn, correct, explanation) {
-    const resultCard = document.getElementById('resultCard');
-    resultCard.classList.remove('hidden');
-    
-    if (correct) {
-        playSfx('success');
-        btn.classList.remove('pouring');
-        btn.classList.add('correct');
-        let pts = Math.max(1, 10 - (attemptsThisRoom * 3));
-        score += pts;
-        document.getElementById('scoreText').textContent = score;
-        document.getElementById('resultTitle').innerHTML = `<span style="color:#00ffa6">✅ Door Unlocked</span>`;
-        document.getElementById('resultMessage').innerHTML = `<strong>Correct!</strong> ${explanation}`;
-        document.getElementById('nextBtn').classList.remove('hidden');
-    } else {
-        playSfx('fail');
-        btn.classList.remove('pouring');
-        btn.classList.add('wrong');
-        btn.style.opacity = "0.2";
-        attemptsThisRoom++;
-        document.getElementById('resultTitle').innerHTML = `<span style="color:#ff6b6b">❌ Reaction Failed</span>`;
-        document.getElementById('resultMessage').textContent = "Incorrect mixture. Security system still active!";
-        document.querySelectorAll('.test-tube').forEach(t => { 
-            if(!t.classList.contains('wrong')) t.disabled = false; 
-        });
-    }
 }
 
 document.getElementById('nextBtn').onclick = () => {
@@ -96,7 +88,7 @@ document.getElementById('nextBtn').onclick = () => {
         document.getElementById('gameBoard').classList.add('hidden');
         document.getElementById('finalScreen').classList.remove('hidden');
         document.getElementById('finalScoreDisplay').textContent = `Final Score: ${score} / 100`;
-        document.getElementById('finalNameDisplay').textContent = `Scientist: ${playerName}`;
+        document.getElementById('finalNameDisplay').textContent = `Researcher: ${playerName}`;
     } else {
         current++;
         renderRoom();
