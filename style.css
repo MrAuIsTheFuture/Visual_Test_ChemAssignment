@@ -7,24 +7,10 @@ body {
   min-height: 100vh;
   font-family: Inter, Arial, sans-serif;
   color: #eef8ff;
-  background:
-    radial-gradient(circle at top right, rgba(0, 220, 255, 0.18), transparent 35%),
-    radial-gradient(circle at bottom left, rgba(0, 255, 170, 0.10), transparent 30%),
-    linear-gradient(135deg, #08111f, #10243d 55%, #08111f);
+  /* Cool chemistry lab background with a dark blue overlay for readability */
+  background: linear-gradient(rgba(8, 17, 31, 0.85), rgba(8, 17, 31, 0.90)), 
+              url('https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&q=80&w=2070') center/cover fixed;
   overflow-x: hidden;
-}
-
-.background-glow {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  background:
-    repeating-linear-gradient(
-      90deg,
-      transparent,
-      transparent 39px,
-      rgba(255,255,255,0.02) 40px
-    );
 }
 
 .game-shell {
@@ -66,13 +52,13 @@ h1 {
 .progress-card,
 .story-card,
 .result-card {
-  background: rgba(8, 20, 35, 0.75);
-  border: 1px solid rgba(90, 220, 255, 0.25);
+  background: rgba(8, 20, 35, 0.85);
+  border: 2px solid rgba(90, 220, 255, 0.25);
   border-radius: 24px;
-  backdrop-filter: blur(14px);
+  backdrop-filter: blur(10px);
   box-shadow:
-    0 20px 60px rgba(0, 0, 0, 0.35),
-    inset 0 0 30px rgba(0, 200, 255, 0.04);
+    0 20px 60px rgba(0, 0, 0, 0.5),
+    inset 0 0 30px rgba(0, 200, 255, 0.05);
 }
 
 .progress-card {
@@ -118,6 +104,7 @@ h1 {
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 28px;
   align-items: end;
+  min-height: 300px; /* Gives space for the pouring animation */
 }
 
 .test-tube {
@@ -126,11 +113,19 @@ h1 {
   cursor: pointer;
   color: inherit;
   padding: 0;
-  transition: transform 0.25s ease, opacity 0.3s ease;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  transform-origin: bottom center;
 }
 
 .test-tube:not(:disabled):hover {
-  transform: translateY(-10px) scale(1.03);
+  transform: translateY(-15px) scale(1.05);
+}
+
+/* THE POURING ANIMATION */
+.test-tube.pouring {
+  transform: translateY(-80px) rotate(-60deg) scale(1.2) !important;
+  z-index: 10;
+  transition: transform 0.8s ease-in-out;
 }
 
 .glass {
@@ -170,6 +165,11 @@ h1 {
   height: 58%;
   border-radius: 0 0 32px 32px;
   animation: wave 3s ease-in-out infinite;
+  transition: height 1s ease-in-out;
+}
+
+.test-tube.pouring .liquid {
+  height: 90%; /* Liquid moves toward the top when pouring */
 }
 
 .liquid::before {
@@ -191,26 +191,26 @@ h1 {
 .label {
   font-weight: 700;
   font-size: 1rem;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 4px 8px;
+  border-radius: 8px;
+  display: inline-block;
 }
 
 .test-tube.correct .glass {
-  box-shadow:
-    0 0 35px rgba(0, 255, 120, 0.5),
-    inset 0 0 25px rgba(0, 255, 120, 0.15);
+  box-shadow: 0 0 45px rgba(0, 255, 120, 0.7), inset 0 0 25px rgba(0, 255, 120, 0.3);
 }
 
-/* Updated wrong answer styling */
 .test-tube.wrong {
   animation: shake 0.4s ease-in-out;
-  opacity: 0.4;
+  opacity: 0.3;
   cursor: not-allowed;
-  filter: grayscale(80%);
+  filter: grayscale(100%);
+  transform: translateY(0) rotate(0deg) scale(1) !important;
 }
 
 .test-tube.wrong .glass {
-  box-shadow:
-    0 0 35px rgba(255, 70, 70, 0.5),
-    inset 0 0 25px rgba(255, 70, 70, 0.15);
+  box-shadow: 0 0 35px rgba(255, 70, 70, 0.5), inset 0 0 25px rgba(255, 70, 70, 0.15);
 }
 
 @keyframes shake {
@@ -229,38 +229,57 @@ h1 {
   text-align: center;
 }
 
+.input-group {
+  margin: 20px 0;
+}
+
+.input-group label {
+  display: block;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  color: #7df9ff;
+}
+
+.input-group input {
+  padding: 12px 20px;
+  font-size: 1.2rem;
+  border-radius: 12px;
+  border: 2px solid #00ffa6;
+  background: rgba(0, 0, 0, 0.4);
+  color: #fff;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.input-group input:focus {
+  outline: none;
+  box-shadow: 0 0 15px rgba(0, 255, 166, 0.5);
+}
+
 .next-btn {
   margin-top: 16px;
   border: none;
-  padding: 14px 22px;
+  padding: 14px 24px;
   border-radius: 14px;
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 700;
   cursor: pointer;
   background: linear-gradient(90deg, #00d4ff, #00ffa6);
   color: #021019;
-  transition: transform 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .next-btn:hover {
   transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(0, 255, 166, 0.4);
 }
 
-.error-text {
-  color: #ff6b6b;
-  font-family: monospace;
-}
-
-.success-text {
-  color: #00ffa6;
-}
+.error-text { color: #ff6b6b; font-size: 1.5rem; }
+.success-text { color: #00ffa6; font-size: 1.5rem;}
 
 @media (max-width: 700px) {
-  .top-bar {
-    flex-direction: column;
-  }
-  .glass {
-    width: 74px;
-    height: 220px;
-  }
+  .top-bar { flex-direction: column; }
+  .glass { width: 74px; height: 220px; }
+  .test-tube.pouring { transform: translateY(-40px) rotate(-45deg) scale(1.1) !important; }
 }
