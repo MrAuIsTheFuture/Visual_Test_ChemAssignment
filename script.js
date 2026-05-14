@@ -13,39 +13,39 @@ const sounds = {
 
 function playSfx(name) {
     sounds[name].currentTime = 0;
-    sounds[name].play().catch(() => console.log("Audio waiting for user click."));
+    sounds[name].play().catch(() => {});
 }
 
-const introScreen = document.getElementById('introScreen');
-const gameBoard = document.getElementById('gameBoard');
-const finalScreen = document.getElementById('finalScreen');
-const scoreText = document.getElementById('scoreText');
-const progressText = document.getElementById('progressText');
-const answersContainer = document.getElementById('answers');
-const resultCard = document.getElementById('resultCard');
-const nextBtn = document.getElementById('nextBtn');
+// Function to shuffle the array of answers
+function shuffleAnswers(array) {
+    return array.sort(() => Math.random() - 0.5);
+}
 
 document.getElementById('startBtn').addEventListener('click', () => {
-    const val = document.getElementById('playerNameInput').value.trim();
-    playerName = val || "Dr. Anonymous";
+    playerName = document.getElementById('playerNameInput').value || "Dr. Anonymous";
     playSfx('start');
-    introScreen.classList.add('hidden');
-    gameBoard.classList.remove('hidden');
+    document.getElementById('introScreen').classList.add('hidden');
+    document.getElementById('gameBoard').classList.remove('hidden');
     renderRoom();
 });
 
 function renderRoom() {
     const q = QUESTIONS[current];
     document.getElementById('roomTitle').textContent = q.room;
-    progressText.textContent = `${current + 1} / 10`;
+    document.getElementById('progressText').textContent = `${current + 1} / 10`;
     document.getElementById('observation').textContent = q.observation;
     document.getElementById('question').textContent = q.question;
+    
+    const answersContainer = document.getElementById('answers');
     answersContainer.innerHTML = '';
-    resultCard.classList.add('hidden');
-    nextBtn.classList.add('hidden');
+    document.getElementById('resultCard').classList.add('hidden');
+    document.getElementById('nextBtn').classList.add('hidden');
     attemptsThisRoom = 0;
 
-    q.answers.forEach(([name, correct, color]) => {
+    // RANDOMIZE the answers before creating buttons
+    const randomizedAnswers = shuffleAnswers([...q.answers]);
+
+    randomizedAnswers.forEach(([name, correct, color]) => {
         const btn = document.createElement('button');
         btn.className = 'test-tube';
         btn.innerHTML = `
@@ -63,38 +63,40 @@ function renderRoom() {
 }
 
 function checkAnswer(btn, correct, explanation) {
+    const resultCard = document.getElementById('resultCard');
     resultCard.classList.remove('hidden');
+    
     if (correct) {
         playSfx('success');
         btn.classList.remove('pouring');
         btn.classList.add('correct');
         let pts = Math.max(1, 10 - (attemptsThisRoom * 3));
         score += pts;
-        scoreText.textContent = score;
-        document.getElementById('resultTitle').innerHTML = `<span class="success-text">✅ Access Granted</span>`;
-        document.getElementById('resultMessage').innerHTML = `<strong>Correct!</strong> ${explanation}<br><em>Chemistry Points: +${pts}</em>`;
-        nextBtn.classList.remove('hidden');
+        document.getElementById('scoreText').textContent = score;
+        document.getElementById('resultTitle').innerHTML = `<span style="color:#00ffa6">✅ Door Unlocked</span>`;
+        document.getElementById('resultMessage').innerHTML = `<strong>Correct!</strong> ${explanation}`;
+        document.getElementById('nextBtn').classList.remove('hidden');
     } else {
         playSfx('fail');
         btn.classList.remove('pouring');
         btn.classList.add('wrong');
+        btn.style.opacity = "0.2";
         attemptsThisRoom++;
-        document.getElementById('resultTitle').innerHTML = `<span class="error-text">❌ Reaction Unstable</span>`;
-        document.getElementById('resultMessage').textContent = "That mixture didn't work. The security lock remains closed! Try again.";
+        document.getElementById('resultTitle').innerHTML = `<span style="color:#ff6b6b">❌ Reaction Failed</span>`;
+        document.getElementById('resultMessage').textContent = "Incorrect mixture. Security system still active!";
         document.querySelectorAll('.test-tube').forEach(t => { 
             if(!t.classList.contains('wrong')) t.disabled = false; 
         });
     }
 }
 
-nextBtn.onclick = () => {
+document.getElementById('nextBtn').onclick = () => {
     if (current === 9) {
         playSfx('complete');
-        gameBoard.classList.add('hidden');
-        finalScreen.classList.remove('hidden');
-        document.getElementById('finalGrade').textContent = score >= 80 ? "🏆 Master Chemist" : score >= 50 ? "👍 Lab Survivor" : "💥 Lab Assistant";
+        document.getElementById('gameBoard').classList.add('hidden');
+        document.getElementById('finalScreen').classList.remove('hidden');
         document.getElementById('finalScoreDisplay').textContent = `Final Score: ${score} / 100`;
-        document.getElementById('finalNameDisplay').textContent = `Scientist on Record: ${playerName}`;
+        document.getElementById('finalNameDisplay').textContent = `Scientist: ${playerName}`;
     } else {
         current++;
         renderRoom();
