@@ -3,21 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🧪 Lab Lockdown: Mad Science Escape</title>
+    <title>🧪 Lab Lockdown: Organic Chemistry</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="background-overlay"></div>
 
     <main class="game-shell" id="introScreen">
-        <section class="story-card center-text">
+        <section class="story-card" style="text-align: center;">
             <h1 class="neon-text">🧪 The Mad Lab</h1>
-            <p class="description-text">Trapped in Dr. Beaker's abandoned laboratory! You must mix the correct reagents to override the security lockdown. One wrong move and the lab goes boom.</p>
+            <p>Dr. Beaker has locked the facility! Correctly identify the chemical reagents to escape.</p>
             <div class="input-group">
-                <label for="playerNameInput">Scientist Name:</label>
-                <input type="text" id="playerNameInput" placeholder="e.g. Dr. Fizz" autocomplete="off">
+                <input type="text" id="playerNameInput" placeholder="Enter Scientist Name">
             </div>
-            <button id="startBtn" class="next-btn">Put on Goggles & Enter 🥽</button>
+            <button id="startBtn" class="next-btn" style="margin-top: 20px;">Put on Goggles & Enter 🥽</button>
         </section>
     </main>
 
@@ -28,17 +27,17 @@
                 <p class="subtitle" id="roomTitle"></p>
             </div>
             <div class="stats-container">
-                <div class="progress-card"><span>Door</span><strong id="progressText">1 / 10</strong></div>
-                <div class="progress-card"><span>Score</span><strong id="scoreText">0</strong></div>
+                <div class="progress-card"><span>Door</span><strong id="progressText">1 / 6</strong></div>
+                <div class="stats-container">
+                    <div class="progress-card"><span>Score</span><strong id="scoreText">0</strong></div>
+                </div>
             </div>
         </header>
 
-        <section class="story-card main-content">
-            <h2>🔬 Observation Log</h2>
-            <div id="observation-container">
-                <p id="observation"></p>
-            </div>
-            <p class="question" id="question"></p>
+        <section class="story-card">
+            <h2 style="color: #7df9ff;">🔬 Observation Log</h2>
+            <p id="observation" style="font-style: italic; color: #bdfaff; background: rgba(0,212,255,0.1); padding: 10px; border-radius: 5px;"></p>
+            <p class="question" id="question" style="font-size: 1.2rem; font-weight: bold; margin-top: 15px;"></p>
         </section>
 
         <section class="tube-rack" id="answers"></section>
@@ -46,17 +45,23 @@
         <section class="result-card hidden" id="resultCard">
             <h3 id="resultTitle"></h3>
             <p id="resultMessage"></p>
-            <button id="nextBtn" class="next-btn hidden">Rush to Next Room 🏃💨</button>
         </section>
     </main>
 
     <main class="game-shell hidden" id="finalScreen">
-        <section class="story-card center-text">
-            <h1 class="neon-text">Simulation Survived!</h1>
-            <h2 id="finalGrade" class="success-text"></h2>
-            <p id="finalScoreDisplay" style="font-size: 1.8rem; margin-top: 20px;"></p>
-            <p id="finalNameDisplay" style="color: #9fdfff; font-family: monospace;"></p>
-            <button id="restartBtn" class="next-btn" style="margin-top: 30px;">Reboot System 🔁</button>
+        <section class="story-card center-text" style="border: 3px solid #00ffa6; text-align: center;">
+            <h1 class="neon-text">Mission Complete!</h1>
+            <h2 id="finalGrade" style="margin: 20px 0; color: #00ffa6;"></h2>
+            <p id="finalScoreDisplay" style="font-size: 1.8rem; font-family: monospace; font-weight: bold;"></p>
+            <p id="finalNameDisplay" style="margin-bottom: 25px; opacity: 0.8; font-size: 1rem;"></p>
+            
+            <div style="background: rgba(0, 255, 166, 0.1); padding: 15px; border-radius: 10px; border: 2px dashed #00ffa6; margin-bottom: 30px;">
+                <p style="color: #00ffa6; font-weight: bold; margin: 0; font-size: 1.1rem;">
+                    📸 Please screenshot and submit in google form TQ!
+                </p>
+            </div>
+
+            <button onclick="location.reload()" class="next-btn">Reboot System 🔁</button>
         </section>
     </main>
 
