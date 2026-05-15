@@ -16,6 +16,11 @@ function playSfx(name) {
     sounds[name].play().catch(() => {});
 }
 
+// Logic to shuffle answers so the game is different every play
+function shuffle(array) {
+    return array.sort(() => Math.random() - 0.5);
+}
+
 document.getElementById('startBtn').onclick = () => {
     playerName = document.getElementById('playerNameInput').value || "Dr. Anonymous";
     playSfx('start');
@@ -37,10 +42,10 @@ function renderRoom() {
     document.getElementById('nextBtn').classList.add('hidden');
     attemptsThisRoom = 0;
 
-    // SHUFFLE answers randomly
-    const shuffled = [...q.answers].sort(() => Math.random() - 0.5);
+    // Shuffle the answers for the room
+    const shuffledAnswers = shuffle([...q.answers]);
 
-    shuffled.forEach(([name, correct, color]) => {
+    shuffledAnswers.forEach(([name, correct, color]) => {
         const btn = document.createElement('button');
         btn.className = 'test-tube';
         btn.innerHTML = `
@@ -59,16 +64,16 @@ function renderRoom() {
                     let pts = Math.max(1, 10 - (attemptsThisRoom * 3));
                     score += pts;
                     document.getElementById('scoreText').textContent = score;
-                    document.getElementById('resultTitle').innerHTML = `<span style="color:#00ffa6">✅ UNLOCKED</span>`;
-                    document.getElementById('resultMessage').innerHTML = `<strong>Correct!</strong> ${q.explanation}`;
+                    document.getElementById('resultTitle').innerHTML = `<span style="color:#00ffa6">✅ ACCESS GRANTED</span>`;
+                    document.getElementById('resultMessage').innerHTML = `<strong>Correct Identification!</strong> ${q.explanation}`;
                     document.getElementById('nextBtn').classList.remove('hidden');
                 } else {
                     playSfx('fail');
                     btn.classList.remove('pouring');
                     btn.classList.add('wrong');
                     attemptsThisRoom++;
-                    document.getElementById('resultTitle').innerHTML = `<span style="color:#ff6b6b">❌ FAILED</span>`;
-                    document.getElementById('resultMessage').textContent = "Wrong chemical! Security system active.";
+                    document.getElementById('resultTitle').innerHTML = `<span style="color:#ff6b6b">❌ ACCESS DENIED</span>`;
+                    document.getElementById('resultMessage').textContent = "Chemical mismatch detected. Try another reagent!";
                     document.querySelectorAll('.test-tube').forEach(t => { if(!t.classList.contains('wrong')) t.disabled = false; });
                 }
             }, 1200);
@@ -82,8 +87,8 @@ document.getElementById('nextBtn').onclick = () => {
         playSfx('complete');
         document.getElementById('gameBoard').classList.add('hidden');
         document.getElementById('finalScreen').classList.remove('hidden');
-        document.getElementById('finalScoreDisplay').textContent = `Final Score: ${score}/100`;
-        document.getElementById('finalNameDisplay').textContent = `Scientist: ${playerName}`;
+        document.getElementById('finalScoreDisplay').textContent = `Final Lab Grade: ${score}/100`;
+        document.getElementById('finalNameDisplay').textContent = `Lead Scientist: ${playerName}`;
     } else {
         current++;
         renderRoom();
